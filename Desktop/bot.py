@@ -61,7 +61,7 @@ def unknown(update: Update, _: CallbackContext):
 def main():
     # Print the token to the console for debugging purposes
     print(f"Token: {TELEGRAM_API_TOKEN}")
-    
+
     updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
