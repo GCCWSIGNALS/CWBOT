@@ -5,6 +5,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 # Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
 TELEGRAM_API_TOKEN = '6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE'
 
+# Replace 'https://cwbot.onrender.com/' with the actual public URL provided by Render
+WEBHOOK_URL = 'https://cwbot.onrender.com/'
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -69,8 +72,14 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, unknown))
     dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-    # Start the bot
-    updater.start_polling()
+    # Start the webhook instead of polling
+    # The webhook will listen for updates from Telegram servers
+    updater.start_webhook(listen="0.0.0.0",
+                          port=8443,
+                          url_path=TELEGRAM_API_TOKEN,
+                          webhook_url=WEBHOOK_URL + TELEGRAM_API_TOKEN)
+
+    # Run the bot until you press Ctrl-C
     updater.idle()
 
 if __name__ == "__main__":
