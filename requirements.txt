@@ -27,5 +27,4 @@ stripe==2.64.0
 tornado==6.1
 tzlocal==5.0.1
 urllib3==1.26.7
-vector==0.1.0
 Werkzeug==2.0.1
