@@ -1,23 +1,18 @@
 import logging
-import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
-# Get the Telegram API token from the environment variable
-TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
-
-# Get the webhook URL from the environment variable
-WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+# Telegram API token
+TELEGRAM_API_TOKEN = "6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c"  # Replace <YOUR_TOKEN> with your actual token
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 def start(update: Update, _: CallbackContext):
     keyboard = [
-        [InlineKeyboardButton("📊 Price Plan 📊", callback_data='price_plan')],
-        [InlineKeyboardButton("💼 Our Services 💼", callback_data='services')],
-        [InlineKeyboardButton("🚀 Our Signals 🚀", callback_data='signals')],
-        [InlineKeyboardButton("👉 JOIN VIP 👈", url='https://t.me/GC_CW1')]
+        [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+        [InlineKeyboardButton("Our Services", callback_data='services')],
+        [InlineKeyboardButton("Our Signals", callback_data='signals')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(
@@ -58,29 +53,25 @@ def button_click(update: Update, _: CallbackContext):
 def unknown(update: Update, _: CallbackContext):
     update.message.reply_text(
         "I'm sorry, I don't understand that command. Please choose one of the options below:",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📊 Price Plan 📊", callback_data='price_plan')],
-                                          [InlineKeyboardButton("💼 Our Services 💼", callback_data='services')],
-                                          [InlineKeyboardButton("🚀 Our Signals 🚀", callback_data='signals')],
-                                          [InlineKeyboardButton("👉 JOIN VIP 👈", url='https://t.me/GC_CW1')]])
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+                                          [InlineKeyboardButton("Our Services", callback_data='services')],
+                                          [InlineKeyboardButton("Our Signals", callback_data='signals')]])
     )
 
 def main():
-    updater = Updater(TELEGRAM_API_TOKEN)
+    # Print the token to the console for debugging purposes
+    print(f"Token: {TELEGRAM_API_TOKEN}")
+
+    updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
-    # Add handlers using the new handler API
+    # Add handlers
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, unknown))
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-    # Start the webhook instead of polling
-    # The webhook will listen for updates from Telegram servers
-    updater.start_webhook(listen="0.0.0.0",
-                          port=8443,
-                          url_path=TELEGRAM_API_TOKEN,
-                          webhook_url=WEBHOOK_URL + TELEGRAM_API_TOKEN)
-
-    # Run the bot until you press Ctrl-C
+    # Start the bot
+    updater.start_polling()
     updater.idle()
 
 if __name__ == "__main__":
