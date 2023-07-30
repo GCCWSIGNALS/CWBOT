@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
 # Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
-TELEGRAM_API_TOKEN = '6069137445:AAE9dLr7jUBSZLPfUmG2XrvrcpKCNa8zLgI'
+TELEGRAM_API_TOKEN = '6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE'
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
