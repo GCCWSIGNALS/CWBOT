@@ -3,8 +3,8 @@ import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
-# Assign the Telegram API token directly
-TELEGRAM_API_TOKEN = '6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE'
+# Get the Telegram API token from the environment variable
+TELEGRAM_API_TOKEN = "<6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE>"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -55,11 +55,12 @@ def unknown(update: Update, _: CallbackContext):
     update.message.reply_text(
         "I'm sorry, I don't understand that command. Please choose one of the options below:",
         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Price Plan", callback_data='price_plan')],
-                                           [InlineKeyboardButton("Our Services", callback_data='services')],
-                                           [InlineKeyboardButton("Our Signals", callback_data='signals')]])
+                                          [InlineKeyboardButton("Our Services", callback_data='services')],
+                                          [InlineKeyboardButton("Our Signals", callback_data='signals')]])
     )
 
 def main():
+    print(f"Token: {TELEGRAM_API_TOKEN}")
     updater = Updater(TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
