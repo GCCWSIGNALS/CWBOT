@@ -5,15 +5,18 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 # Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
 TELEGRAM_API_TOKEN = '6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE'
 
+# Replace 'https://cwbot.onrender.com/' with the actual public URL provided by Render
+WEBHOOK_URL = 'https://cwbot.onrender.com/'
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 def start(update: Update, _: CallbackContext):
     keyboard = [
-        [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
-        [InlineKeyboardButton("Our Services", callback_data='services')],
-        [InlineKeyboardButton("Our Signals", callback_data='signals')],
-        [InlineKeyboardButton("JOIN VIP", url='https://t.me/GC_CW1')]
+        [InlineKeyboardButton("📊 Price Plan 📊", callback_data='price_plan')],
+        [InlineKeyboardButton("💼 Our Services 💼", callback_data='services')],
+        [InlineKeyboardButton("🚀 Our Signals 🚀", callback_data='signals')],
+        [InlineKeyboardButton("👉 JOIN VIP 👈", url='https://t.me/GC_CW1')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(
@@ -54,10 +57,10 @@ def button_click(update: Update, _: CallbackContext):
 def unknown(update: Update, _: CallbackContext):
     update.message.reply_text(
         "I'm sorry, I don't understand that command. Please choose one of the options below:",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Price Plan", callback_data='price_plan')],
-                                          [InlineKeyboardButton("Our Services", callback_data='services')],
-                                          [InlineKeyboardButton("Our Signals", callback_data='signals')],
-                                          [InlineKeyboardButton("JOIN VIP", url='https://t.me/GC_CW1')]])
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📊 Price Plan 📊", callback_data='price_plan')],
+                                          [InlineKeyboardButton("💼 Our Services 💼", callback_data='services')],
+                                          [InlineKeyboardButton("🚀 Our Signals 🚀", callback_data='signals')],
+                                          [InlineKeyboardButton("👉 JOIN VIP 👈", url='https://t.me/GC_CW1')]])
     )
 
 def main():
@@ -69,8 +72,12 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, unknown))
     dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-    # Start the bot using polling instead of the webhook
-    updater.start_polling()
+    # Start the webhook instead of polling
+    # The webhook will listen for updates from Telegram servers
+    updater.start_webhook(listen="0.0.0.0",
+                          port=8443,
+                          url_path=TELEGRAM_API_TOKEN,
+                          webhook_url=WEBHOOK_URL + TELEGRAM_API_TOKEN)
 
     # Run the bot until you press Ctrl-C
     updater.idle()
