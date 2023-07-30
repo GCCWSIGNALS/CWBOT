@@ -1,6 +1,5 @@
 import logging
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Filters
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, CallbackQueryHandler
 
 # Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
@@ -13,7 +12,8 @@ def start(update: Update, _: CallbackContext):
     keyboard = [
         [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
         [InlineKeyboardButton("Our Services", callback_data='services')],
-        [InlineKeyboardButton("Our Signals", callback_data='signals')]
+        [InlineKeyboardButton("Our Signals", callback_data='signals')],
+        [InlineKeyboardButton("JOIN VIP", callback_data='join_vip')]  # Add this line
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(
@@ -50,13 +50,18 @@ def button_click(update: Update, _: CallbackContext):
             "🔹 Copy the signals and follow our expert analysis\n\n"
             "Start making profitable trades with our signals!"
         )
+    elif option == 'join_vip':  # Add this block
+        query.message.reply_text(
+            "To join VIP, please message @GC_CW!"
+        )
 
 def unknown(update: Update, _: CallbackContext):
     update.message.reply_text(
         "I'm sorry, I don't understand that command. Please choose one of the options below:",
         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Price Plan", callback_data='price_plan')],
                                           [InlineKeyboardButton("Our Services", callback_data='services')],
-                                          [InlineKeyboardButton("Our Signals", callback_data='signals')]])
+                                          [InlineKeyboardButton("Our Signals", callback_data='signals')],
+                                          [InlineKeyboardButton("JOIN VIP", callback_data='join_vip')]])  # Add this line
     )
 
 def main():
