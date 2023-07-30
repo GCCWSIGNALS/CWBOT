@@ -1,9 +1,8 @@
 import logging
-import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
-# Set the Telegram API token
+# Telegram API token
 TELEGRAM_API_TOKEN = "<6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c>"
 
 # Enable logging
@@ -60,7 +59,9 @@ def unknown(update: Update, _: CallbackContext):
     )
 
 def main():
-    print(f"Token: {TELEGRAM_API_TOKEN}")
+    # Print the token to the console for debugging purposes
+    print(f"Token: {6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c}")
+    
     updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
