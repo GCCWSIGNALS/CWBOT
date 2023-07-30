@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
 # Get the Telegram API token from the environment variable
-TELEGRAM_API_TOKEN = "<6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE>"
+TELEGRAM_API_TOKEN = "<6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c>"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
