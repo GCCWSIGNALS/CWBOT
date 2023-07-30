@@ -3,6 +3,7 @@ APScheduler==3.6.3
 cachetools==4.2.2
 certifi==2023.7.22
 charset-normalizer==3.2.0
+Flask==2.0.1 
 h11==0.14.0
 httpcore==0.17.3
 httpx==0.24.1
