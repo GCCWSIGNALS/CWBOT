@@ -1,12 +1,13 @@
 import logging
+import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
-# Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
-TELEGRAM_API_TOKEN = '6069137445:AAFSbxOcA0du2vlkX50rwgAClj2Blo3CrvE'
+# Get the Telegram API token from the environment variable
+TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
 
-# Replace 'https://cwbot.onrender.com/' with the actual public URL provided by Render
-WEBHOOK_URL = 'https://cwbot.onrender.com/'
+# Get the webhook URL from the environment variable
+WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
