@@ -80,8 +80,8 @@ def main():
         dispatcher.add_handler(MessageHandler(Filters.command, unknown))
         dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-        # Start the bot
-        updater.start_polling()
+        # Start the bot and ensure only one instance is running
+        updater.start_polling(run_once=True)
         updater.idle()
     except Exception as e:
         logging.error("An error occurred during bot execution: %s", str(e))
