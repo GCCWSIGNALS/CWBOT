@@ -1,6 +1,6 @@
 import logging
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, CallbackQueryHandler
+from telegram import Update, MessageEntity
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 # Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
 TELEGRAM_API_TOKEN = '6069137445:AAE9dLr7jUBSZLPfUmG2XrvrcpKCNa8zLgI'
