@@ -2,12 +2,15 @@ import logging
 import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
+from flask import Flask, request, Response
 
 # Get the Telegram API token from the environment variable
 TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+app = Flask(__name__)
 
 def start(update: Update, _: CallbackContext):
     keyboard = [
@@ -80,5 +83,11 @@ def main():
 
     updater.idle()
 
+# Add a route to handle GET requests
+@app.route('/' + TELEGRAM_API_TOKEN, methods=['GET'])
+def handle_get():
+    return "This is a webhook URL!"
+
+# Run the Flask app
 if __name__ == "__main__":
-    main()
+    app.run(port=int(os.environ.get('PORT', '8443')))
