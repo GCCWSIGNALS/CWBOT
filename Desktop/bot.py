@@ -1,9 +1,10 @@
 import logging
+import os
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
-# Replace 'YOUR_TELEGRAM_API_TOKEN' with your actual Telegram API token
-TELEGRAM_API_TOKEN = '6069137445:AAEP4YzZtfMoR4r6DBA04k7A8R-kij83EUU'
+# Get the Telegram API token from the environment variable
+TELEGRAM_API_TOKEN = os.getenv('TELEGRAM_API_TOKEN')
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -59,7 +60,7 @@ def unknown(update: Update, _: CallbackContext):
     )
 
 def main():
-    updater = Updater(TELEGRAM_API_TOKEN)
+    updater = Updater(TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
     # Add handlers
@@ -67,8 +68,16 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.command, unknown))
     dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-    # Start the bot
-    updater.start_polling()
+    # Start the bot with webhook
+    updater.start_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get('PORT', '8443')),
+        url_path=TELEGRAM_API_TOKEN
+    )
+    
+    # Set the webhook url
+    updater.bot.set_webhook("https://cwbot.onrender.com/" + TELEGRAM_API_TOKEN)
+
     updater.idle()
 
 if __name__ == "__main__":
