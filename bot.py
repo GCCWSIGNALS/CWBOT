@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
 # Telegram API token
-TELEGRAM_API_TOKEN = "6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c"  # Replace <YOUR_TOKEN> with your actual token
+TELEGRAM_API_TOKEN = "6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c"  # Replace with your actual token
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -62,6 +62,9 @@ def main():
     # Print the token to the console for debugging purposes
     print(f"Token: {TELEGRAM_API_TOKEN}")
 
+    if TELEGRAM_API_TOKEN is None:
+        raise ValueError("Telegram API token is not provided. Please set TELEGRAM_API_TOKEN variable.")
+    
     updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
