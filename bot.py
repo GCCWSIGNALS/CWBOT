@@ -71,7 +71,7 @@ def main():
     try:
         # Print the token to the console for debugging purposes
         print(f"Token: {TELEGRAM_API_TOKEN}")
-        
+
         updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
         dispatcher = updater.dispatcher
 
@@ -81,7 +81,7 @@ def main():
         dispatcher.add_handler(CallbackQueryHandler(button_click))
 
         # Start the bot and ensure only one instance is running
-        updater.start_polling(run_once=True)
+        updater.start_polling()
         updater.idle()
     except Exception as e:
         logging.error("An error occurred during bot execution: %s", str(e))
