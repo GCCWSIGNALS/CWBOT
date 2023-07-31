@@ -1,5 +1,4 @@
 import logging
-from flask import Flask, request
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
@@ -8,9 +7,6 @@ TELEGRAM_API_TOKEN = "6069137445:AAGoUQm1UVt0sfGpCqKcMxLgLwCTZhPBH9c"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-# Create Flask app
-app = Flask(__name__)
 
 def start(update: Update, _: CallbackContext):
     try:
@@ -71,29 +67,21 @@ def unknown(update: Update, _: CallbackContext):
     except Exception as e:
         logging.error("An error occurred during unknown handler: %s", str(e))
 
-# Define a route to handle Telegram updates
-@app.route(f'/{TELEGRAM_API_TOKEN}', methods=['POST'])
-def webhook():
-    update = Update.de_json(request.get_json(force=True), bot)
-    dispatcher.process_update(update)
-    return 'ok'
-
 def main():
     try:
         # Print the token to the console for debugging purposes
         print(f"Token: {TELEGRAM_API_TOKEN}")
 
         updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
-        global dispatcher
         dispatcher = updater.dispatcher
 
         # Add handlers
         dispatcher.add_handler(CommandHandler("start", start))
         dispatcher.add_handler(MessageHandler(Filters.command, unknown))
         dispatcher.add_handler(CallbackQueryHandler(button_click))
-        
-        # Start the Flask app
-        app.run(host='0.0.0.0', port=5000, debug=False)
+
+        # Start long polling
+        updater.start_polling()
 
     except Exception as e:
         logging.error("An error occurred during bot execution: %s", str(e))
