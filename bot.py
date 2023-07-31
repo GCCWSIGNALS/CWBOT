@@ -91,15 +91,12 @@ def main():
         dispatcher.add_handler(CommandHandler("start", start))
         dispatcher.add_handler(MessageHandler(Filters.command, unknown))
         dispatcher.add_handler(CallbackQueryHandler(button_click))
-
-def main():
-    # Start the Flask app
-    try:
+        
+        # Start the Flask app
         app.run(host='0.0.0.0', port=5000, debug=False)
+
     except Exception as e:
         logging.error("An error occurred during bot execution: %s", str(e))
 
 if __name__ == "__main__":
     main()
-
-
