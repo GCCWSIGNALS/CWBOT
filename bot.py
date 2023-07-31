@@ -1,4 +1,5 @@
 import logging
+import traceback
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
@@ -23,7 +24,7 @@ def start(update: Update, _: CallbackContext):
             reply_markup=reply_markup
         )
     except Exception as e:
-        logging.error("An error occurred during start handler: %s", str(e))
+        logging.error("An error occurred during start handler: %s", traceback.format_exc())
 
 def button_click(update: Update, _: CallbackContext):
     try:
@@ -31,14 +32,14 @@ def button_click(update: Update, _: CallbackContext):
         option = query.data
 
         if option == 'price_plan':
-            query.message.reply_text(
+            query.edit_message_text(
                 "Our Price Plan:\n\n"
                 "🌟 7-day free trial\n"
                 "🌟 After the free trial, the subscription is £34.99/month.\n\n"
                 "Subscribe now to get started!"
             )
         elif option == 'services':
-            query.message.reply_text(
+            query.edit_message_text(
                 "Our Services:\n\n"
                 "🔹 Live Trading Sessions\n"
                 "🔹 VIP Forex & Gold Signals\n"
@@ -46,7 +47,7 @@ def button_click(update: Update, _: CallbackContext):
                 "Join us now and enjoy our premium services!"
             )
         elif option == 'signals':
-            query.message.reply_text(
+            query.edit_message_text(
                 "Our Signals:\n\n"
                 "🔹 Buy/Sell Signals with Entry and Exit Prices\n"
                 "🔹 Take Profit (TP) and Stop Loss (SL) Levels\n"
@@ -54,7 +55,7 @@ def button_click(update: Update, _: CallbackContext):
                 "Start making profitable trades with our signals!"
             )
     except Exception as e:
-        logging.error("An error occurred during button_click handler: %s", str(e))
+        logging.error("An error occurred during button_click handler: %s", traceback.format_exc())
 
 def unknown(update: Update, _: CallbackContext):
     try:
@@ -65,7 +66,7 @@ def unknown(update: Update, _: CallbackContext):
                                               [InlineKeyboardButton("Our Signals", callback_data='signals')]])
         )
     except Exception as e:
-        logging.error("An error occurred during unknown handler: %s", str(e))
+        logging.error("An error occurred during unknown handler: %s", traceback.format_exc())
 
 def main():
     try:
@@ -84,7 +85,7 @@ def main():
         updater.start_polling()
 
     except Exception as e:
-        logging.error("An error occurred during bot execution: %s", str(e))
+        logging.error("An error occurred during bot execution: %s", traceback.format_exc())
 
 if __name__ == "__main__":
     main()
