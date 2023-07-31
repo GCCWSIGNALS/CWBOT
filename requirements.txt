@@ -4,7 +4,6 @@ cachetools==4.2.2
 certifi==2023.7.22
 charset-normalizer==2.0.0
 click==8.0.1
-flask==2.0.1
 h11==0.14.0
 httpcore==0.17.3
 httpx==0.24.1
@@ -27,4 +26,3 @@ stripe==2.64.0
 tornado==6.1
 tzlocal==5.0.1
 urllib3==1.26.7
-Werkzeug==2.0.1
