@@ -1,14 +1,16 @@
 import logging
 import traceback
-
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
+from flask import Flask, request
+from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import CallbackContext, CallbackQueryHandler, MessageHandler, Filters, CommandHandler, Dispatcher
 
 # Telegram API token
 TELEGRAM_API_TOKEN = "6488455720:AAHbpah1B1P9hhWnAfpHilvCm1Y3Wdk7lwA"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+app = Flask(__name__)
 
 def start(update: Update, _: CallbackContext):
     try:
@@ -69,24 +71,38 @@ def unknown(update: Update, _: CallbackContext):
     except Exception as e:
         logging.error("An error occurred during unknown handler: %s", traceback.format_exc())
 
-def main():
-    try:
-        # Print the token to the console for debugging purposes
-        print(f"Token: {TELEGRAM_API_TOKEN}")
+@app.route('/' + TELEGRAM_API_TOKEN, methods=['POST'])
+def webhook_update():
+    update = Update.de_json(request.get_json(force=True), bot)
+    dispatcher.process_update(update)
+    return 'ok'
 
-        updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
-        dispatcher = updater.dispatcher
+@app.route('/')
+def index():
+    return 'Hello World!'
 
-        # Add handlers
-        dispatcher.add_handler(CommandHandler("start", start))
-        dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-        dispatcher.add_handler(CallbackQueryHandler(button_click))
+@app.route('/set_webhook', methods=['GET', 'POST'])
+def set_webhook():
+    s = bot.setWebhook('https://cwbot.onrender.com/' + TELEGRAM_API_TOKEN)
+    if s:
+        return "webhook setup ok"
+    else:
+        return "webhook setup failed"
 
-        # Start long polling
-        updater.start_polling()
+@app.route('/remove_webhook', methods=['GET', 'POST'])
+def remove_webhook():
+    s = bot.deleteWebhook()
+    if s:
+        return "webhook removed"
+    else:
+        return "webhook remove failed"
 
-    except Exception as e:
-        logging.error("An error occurred during bot execution: %s", traceback.format_exc())
+bot = Bot(token=TELEGRAM_API_TOKEN)
+dispatcher = Dispatcher(bot, None, workers=0)
 
-if __name__ == "__main__":
-    main()
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+dispatcher.add_handler(CallbackQueryHandler(button_click))
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
