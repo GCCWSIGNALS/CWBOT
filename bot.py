@@ -1,17 +1,13 @@
 import logging
 import traceback
-import os
-import sys
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler, InstancePersistence
 
 # Telegram API token
 TELEGRAM_API_TOKEN = "6488455720:AAHbpah1B1P9hhWnAfpHilvCm1Y3Wdk7lwA"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-lock_file = "/tmp/bot.lock"
 
 def start(update: Update, _: CallbackContext):
     try:
@@ -77,7 +73,8 @@ def main():
         # Print the token to the console for debugging purposes
         print(f"Token: {TELEGRAM_API_TOKEN}")
 
-        updater = Updater(token=TELEGRAM_API_TOKEN, use_context=True)
+        persistence = InstancePersistence()
+        updater = Updater(token=TELEGRAM_API_TOKEN, persistence=persistence, use_context=True)
         dispatcher = updater.dispatcher
 
         # Add handlers
@@ -92,14 +89,4 @@ def main():
         logging.error("An error occurred during bot execution: %s", traceback.format_exc())
 
 if __name__ == "__main__":
-    if os.path.isfile(lock_file):
-        print(f"Lock file {lock_file} exists, bot is already running. Exiting...")
-        sys.exit()
-    # Create lock file
-    with open(lock_file, 'w') as file:
-        file.write("lock")
-    try:
-        main()
-    finally:
-        # Make sure we delete the lock file
-        os.remove(lock_file)
+    main()
