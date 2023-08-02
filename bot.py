@@ -53,14 +53,16 @@ def button_click(update: Update, _: CallbackContext):
         query = update.callback_query
         option = query.data
 
-        keyboard = [
-            [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
-            [InlineKeyboardButton("Our Services", callback_data='services')],
-            [InlineKeyboardButton("Our Signals", callback_data='signals')]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        join_button = [InlineKeyboardButton("Join", url='https://t.me/GC_CW1')]
 
         if option == 'price_plan':
+            keyboard = [
+                [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+                [InlineKeyboardButton("Our Services", callback_data='services')],
+                [InlineKeyboardButton("Our Signals", callback_data='signals')],
+                join_button
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
             query.edit_message_text(
                 "Our Price Plan:\n\n"
                 "🌟 7-day free trial\n"
@@ -69,6 +71,13 @@ def button_click(update: Update, _: CallbackContext):
                 reply_markup=reply_markup
             )
         elif option == 'services':
+            keyboard = [
+                [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+                [InlineKeyboardButton("Our Services", callback_data='services')],
+                [InlineKeyboardButton("Our Signals", callback_data='signals')],
+                join_button
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
             query.edit_message_text(
                 "Our Services:\n\n"
                 "🔹 Live Trading Sessions\n"
@@ -78,6 +87,13 @@ def button_click(update: Update, _: CallbackContext):
                 reply_markup=reply_markup
             )
         elif option == 'signals':
+            keyboard = [
+                [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+                [InlineKeyboardButton("Our Services", callback_data='services')],
+                [InlineKeyboardButton("Our Signals", callback_data='signals')],
+                join_button
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
             query.edit_message_text(
                 "Our Signals:\n\n"
                 "🔹 Buy/Sell Signals with Entry and Exit Prices\n"
@@ -88,6 +104,7 @@ def button_click(update: Update, _: CallbackContext):
             )
     except Exception as e:
         logging.error("An error occurred during button_click handler: %s", traceback.format_exc())
+
 
 
 def unknown(update: Update, _: CallbackContext):
