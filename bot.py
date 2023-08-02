@@ -2,17 +2,32 @@ import logging
 import traceback
 
 try:
-    from telegram.ext import InstancePersistence
+    from telegram.ext import BasePersistence
 except ImportError:
-    # If InstancePersistence is not available, create a dummy class to act as a fallback.
-    class InstancePersistence:
+    # If BasePersistence is not available, create a dummy class to act as a fallback.
+    class BasePersistence:
         def __init__(self):
             pass
 
-        def acquire(self):
+        def get_user_data(self):
+            return {}
+
+        def get_chat_data(self):
+            return {}
+
+        def get_bot_data(self):
+            return {}
+
+        def update_user_data(self, user_id, data):
             pass
 
-        def release(self):
+        def update_chat_data(self, chat_id, data):
+            pass
+
+        def update_bot_data(self, data):
+            pass
+
+        def flush(self):
             pass
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
@@ -88,7 +103,9 @@ def main():
         # Print the token to the console for debugging purposes
         print(f"Token: {TELEGRAM_API_TOKEN}")
 
-        persistence = InstancePersistence()
+        # Create a custom persistence object (a dummy persistence mechanism)
+        persistence = BasePersistence()
+        
         updater = Updater(token=TELEGRAM_API_TOKEN, persistence=persistence, use_context=True)
         dispatcher = updater.dispatcher
 
