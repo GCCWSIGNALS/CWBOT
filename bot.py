@@ -53,12 +53,20 @@ def button_click(update: Update, _: CallbackContext):
         query = update.callback_query
         option = query.data
 
+        keyboard = [
+            [InlineKeyboardButton("Price Plan", callback_data='price_plan')],
+            [InlineKeyboardButton("Our Services", callback_data='services')],
+            [InlineKeyboardButton("Our Signals", callback_data='signals')]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
         if option == 'price_plan':
             query.edit_message_text(
                 "Our Price Plan:\n\n"
                 "🌟 7-day free trial\n"
                 "🌟 After the free trial, the subscription is £34.99/month.\n\n"
-                "Subscribe now to get started!"
+                "Subscribe now to get started!",
+                reply_markup=reply_markup
             )
         elif option == 'services':
             query.edit_message_text(
@@ -66,7 +74,8 @@ def button_click(update: Update, _: CallbackContext):
                 "🔹 Live Trading Sessions\n"
                 "🔹 VIP Forex & Gold Signals\n"
                 "🔹 Supportive and Helpful Active Community\n\n"
-                "Join us now and enjoy our premium services!"
+                "Join us now and enjoy our premium services!",
+                reply_markup=reply_markup
             )
         elif option == 'signals':
             query.edit_message_text(
@@ -74,10 +83,12 @@ def button_click(update: Update, _: CallbackContext):
                 "🔹 Buy/Sell Signals with Entry and Exit Prices\n"
                 "🔹 Take Profit (TP) and Stop Loss (SL) Levels\n"
                 "🔹 Copy the signals and follow our expert analysis\n\n"
-                "Start making profitable trades with our signals!"
+                "Start making profitable trades with our signals!",
+                reply_markup=reply_markup
             )
     except Exception as e:
         logging.error("An error occurred during button_click handler: %s", traceback.format_exc())
+
 
 def unknown(update: Update, _: CallbackContext):
     try:
