@@ -1,7 +1,22 @@
 import logging
 import traceback
+
+try:
+    from telegram.ext import InstancePersistence
+except ImportError:
+    # If InstancePersistence is not available, create a dummy class to act as a fallback.
+    class InstancePersistence:
+        def __init__(self):
+            pass
+
+        def acquire(self):
+            pass
+
+        def release(self):
+            pass
+
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler, InstancePersistence
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
 
 # Telegram API token
 TELEGRAM_API_TOKEN = "6488455720:AAHbpah1B1P9hhWnAfpHilvCm1Y3Wdk7lwA"
