@@ -1,8 +1,9 @@
 import logging
 import traceback
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, Bot
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler, Dispatcher
 from flask import Flask, request
-from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import CallbackContext, CallbackQueryHandler, MessageHandler, Filters, CommandHandler, Dispatcher
+import os
 
 # Telegram API token
 TELEGRAM_API_TOKEN = "6488455720:AAHbpah1B1P9hhWnAfpHilvCm1Y3Wdk7lwA"
@@ -10,7 +11,25 @@ TELEGRAM_API_TOKEN = "6488455720:AAHbpah1B1P9hhWnAfpHilvCm1Y3Wdk7lwA"
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+# Flask app
 app = Flask(__name__)
+
+@app.route("/" + TELEGRAM_API_TOKEN, methods=["POST"])
+def update():
+    dispatcher.process_update(Update.de_json(request.get_json(force=True), bot))
+    return "ok"
+
+@app.route("/set_webhook", methods=["GET", "POST"])
+def set_webhook():
+    s = bot.set_webhook("https://cwbot.onrender.com/{}".format(TELEGRAM_API_TOKEN))
+    if s:
+        return "webhook setup ok"
+    else:
+        return "webhook setup failed"
+
+@app.route("/")
+def index():
+    return "."
 
 def start(update: Update, _: CallbackContext):
     try:
@@ -65,44 +84,25 @@ def unknown(update: Update, _: CallbackContext):
         update.message.reply_text(
             "I'm sorry, I don't understand that command. Please choose one of the options below:",
             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Price Plan", callback_data='price_plan')],
-                                              [InlineKeyboardButton("Our Services", callback_data='services')],
-                                              [InlineKeyboardButton("Our Signals", callback_data='signals')]])
+                                               [InlineKeyboardButton("Our Services", callback_data='services')],
+                                               [InlineKeyboardButton("Our Signals", callback_data='signals')]])
         )
     except Exception as e:
         logging.error("An error occurred during unknown handler: %s", traceback.format_exc())
 
-@app.route('/' + TELEGRAM_API_TOKEN, methods=['POST'])
-def webhook_update():
-    update = Update.de_json(request.get_json(force=True), bot)
-    dispatcher.process_update(update)
-    return 'ok'
+def main():
+    global bot
+    global dispatcher
 
-@app.route('/')
-def index():
-    return 'Hello World!'
+    bot = Bot(token=TELEGRAM_API_TOKEN)
+    dispatcher = Dispatcher(bot=bot, update_queue=None, use_context=True)
 
-@app.route('/set_webhook', methods=['GET', 'POST'])
-def set_webhook():
-    s = bot.setWebhook('https://cwbot.onrender.com/' + TELEGRAM_API_TOKEN)
-    if s:
-        return "webhook setup ok"
-    else:
-        return "webhook setup failed"
+    # handlers
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(MessageHandler(Filters.command, unknown))
+    dispatcher.add_handler(CallbackQueryHandler(button_click))
 
-@app.route('/remove_webhook', methods=['GET', 'POST'])
-def remove_webhook():
-    s = bot.deleteWebhook()
-    if s:
-        return "webhook removed"
-    else:
-        return "webhook remove failed"
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', '5000')))
 
-bot = Bot(token=TELEGRAM_API_TOKEN)
-dispatcher = Dispatcher(bot, None, workers=0)
-
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-dispatcher.add_handler(CallbackQueryHandler(button_click))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+if __name__ == "__main__":
+    main()
